@@ -3,7 +3,12 @@ pipeline {
 
     environment {
         AWS_DEFAULT_REGION = 'us-east-1' 
-        VAR_FILE = 'dev.tfvars' 
+        VAR_FILE = 'dev.tfvars'
+        
+        // LEFT SIDE: The name Terraform wants (Do not change)
+        // RIGHT SIDE: The ID from your Jenkins screenshot
+        AWS_ACCESS_KEY_ID     = credentials('AWS_Access_Key')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_Secret_Key')
     }
 
     stages {
