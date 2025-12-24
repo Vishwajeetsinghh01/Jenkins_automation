@@ -27,10 +27,13 @@ pipeline {
         stage('Task 2: Dynamic Inventory Management') {
             steps {
                 script {
-                    sh """
-                        echo "[splunk]" > dynamic_inventory.ini
-                        echo "${env.INSTANCE_IP} ansible_user=ec2-user ansible_ssh_private_key_file=private_key.pem" >> dynamic_inventory.ini
-                    """
+                    // Create the file header
+                    sh "echo '[splunk]' > dynamic_inventory.ini"
+                    
+                    // FIXED: Added 'ansible_python_interpreter=/usr/bin/python3.8' to the end
+                    sh "echo '${env.INSTANCE_IP} ansible_user=ec2-user ansible_ssh_private_key_file=private_key.pem ansible_python_interpreter=/usr/bin/python3.8' >> dynamic_inventory.ini"
+                    
+                    // Verify file existence
                     sh "cat dynamic_inventory.ini"
                 }
             }
