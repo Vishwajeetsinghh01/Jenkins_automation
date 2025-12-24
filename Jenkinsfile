@@ -52,21 +52,22 @@ pipeline {
                     env.ANSIBLE_HOST_KEY_CHECKING = 'False'
                 }
                 
-                // I updated this to use 'ansible_ssh_key' which I saw in your screenshot!
-                withCredentials([file(credentialsId: 'ansible_ssh_key', variable: 'MY_PEM_KEY')]) {
+                // FIXED: We changed 'file' to 'sshUserPrivateKey' to match your credential type
+                withCredentials([sshUserPrivateKey(credentialsId: 'ansible_ssh_key', keyFileVariable: 'MY_PEM_KEY', usernameVariable: 'SSH_USER')]) {
                     script {
+                        // The robot takes the key from the safe and copies it to a file
                         sh 'cp $MY_PEM_KEY private_key.pem'
                         sh 'chmod 600 private_key.pem'
                     }
 
-                    // FIXED: Changed 'playbooks' to 'playbook' (removed the 's')
+                    // Run the Playbooks
                     ansiblePlaybook(
                         playbook: 'playbook/splunk.yml',
                         inventory: 'dynamic_inventory.ini',
                         colorized: true
                     )
                     ansiblePlaybook(
-                        playbook: 'playbook/test-splunk.yml', // Fixed here too
+                        playbook: 'playbook/test-splunk.yml',
                         inventory: 'dynamic_inventory.ini',
                         colorized: true
                     )
