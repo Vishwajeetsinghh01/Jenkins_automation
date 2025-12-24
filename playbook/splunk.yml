@@ -4,7 +4,8 @@
   tasks:
     - name: Download Splunk
       get_url:
-        url: "https://download.splunk.com/products/..." # (Simplified URL)
+        # This is a REAL link to Splunk 9.3.0
+        url: "https://download.splunk.com/products/splunk/releases/9.3.0/linux/splunk-9.3.0-51ccf43db5bd-linux-2.6-x86_64.rpm"
         dest: /tmp/splunk.rpm
 
     - name: Install Splunk
