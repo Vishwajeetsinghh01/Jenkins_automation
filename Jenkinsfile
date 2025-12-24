@@ -48,16 +48,31 @@ pipeline {
 
         stage('Task 4: Splunk Installation & Testing') {
             steps {
-                ansiblePlaybook(
-                    playbook: 'playbooks/splunk.yml',
-                    inventory: 'dynamic_inventory.ini',
-                    colorized: true
-                )
-           s     ansiblePlaybook(
-                    playbook: 'playbooks/test-splunk.yml',
-                    inventory: 'dynamic_inventory.ini',
-                    colorized: true
-                )
+                script {
+                    // 1. Tell Ansible to trust the new server automatically
+                    env.ANSIBLE_HOST_KEY_CHECKING = 'False'
+                }
+                
+                // 2. Get the key from the safe (SSH_KEY_FILE)
+                withCredentials([file(credentialsId: 'SSH_KEY_FILE', variable: 'MY_PEM_KEY')]) {
+                    script {
+                        // Copy the key to the workspace and make it private
+                        sh 'cp $MY_PEM_KEY private_key.pem'
+                        sh 'chmod 600 private_key.pem'
+                    }
+
+                    // 3. Run the Playbooks
+                    ansiblePlaybook(
+                        playbook: 'playbooks/splunk.yml',
+                        inventory: 'dynamic_inventory.ini',
+                        colorized: true
+                    )
+                    ansiblePlaybook(
+                        playbook: 'playbooks/test-splunk.yml',
+                        inventory: 'dynamic_inventory.ini',
+                        colorized: true
+                    )
+                }
             }
         }
 
