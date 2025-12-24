@@ -4,24 +4,14 @@
   tasks:
     - name: Download Splunk
       get_url:
-        # This is a verified working link for Splunk 9.1.0
-        url: "https://download.splunk.com/products/splunk/releases/9.1.0/linux/splunk-9.1.0-1c86ca0bacc3-linux-2.6-x86_64.rpm"
+        # UPDATED LINK: Splunk 9.2.1 (Verified)
+        url: "https://download.splunk.com/products/splunk/releases/9.2.1/linux/splunk-9.2.1-78803f08aabb-linux-2.6-x86_64.rpm"
         dest: /tmp/splunk.rpm
 
     - name: Install Splunk
       yum:
         name: /tmp/splunk.rpm
         state: present
-
-    - name: Open Firewall Ports (8000 & 8089)
-      firewalld:
-        port: "{{ item }}"
-        permanent: yes
-        state: enabled
-      loop:
-        - 8000/tcp
-        - 8089/tcp
-      ignore_errors: yes # Ignores error if firewalld is missing (Amazon Linux uses Security Groups)
 
     - name: Enable Splunk Boot Start & Accept License
       command: "/opt/splunk/bin/splunk enable boot-start --accept-license --answer-yes --no-prompt"
