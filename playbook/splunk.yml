@@ -4,7 +4,7 @@
   tasks:
     - name: Download Splunk
       get_url:
-        # This is a REAL link to Splunk 9.3.0
+        # 1. FIXED: This is the Real Download Link
         url: "https://download.splunk.com/products/splunk/releases/9.3.0/linux/splunk-9.3.0-51ccf43db5bd-linux-2.6-x86_64.rpm"
         dest: /tmp/splunk.rpm
 
@@ -12,3 +12,21 @@
       yum:
         name: /tmp/splunk.rpm
         state: present
+
+    - name: Open Firewall Ports (8000 & 8089)
+      firewalld:
+        port: "{{ item }}"
+        permanent: yes
+        state: enabled
+      loop:
+        - 8000/tcp
+        - 8089/tcp
+      ignore_errors: yes # In case firewalld isn't installed
+
+    - name: Enable Splunk Boot Start & Accept License
+      command: "/opt/splunk/bin/splunk enable boot-start --accept-license --answer-yes --no-prompt"
+
+    - name: Start Splunk Service
+      service:
+        name: Splunkd
+        state: started
