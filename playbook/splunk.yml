@@ -1,0 +1,13 @@
+---
+- hosts: splunk
+  become: yes
+  tasks:
+    - name: Download Splunk
+      get_url:
+        url: "https://download.splunk.com/products/..." # (Simplified URL)
+        dest: /tmp/splunk.rpm
+
+    - name: Install Splunk
+      yum:
+        name: /tmp/splunk.rpm
+        state: present

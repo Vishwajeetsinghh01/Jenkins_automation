@@ -1,0 +1,5 @@
+---
+- hosts: splunk
+  tasks:
+    - name: Check if Splunk is running
+      command: systemctl status splunk
