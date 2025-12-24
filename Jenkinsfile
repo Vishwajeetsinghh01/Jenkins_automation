@@ -52,10 +52,10 @@ pipeline {
                     env.ANSIBLE_HOST_KEY_CHECKING = 'False'
                 }
                 
-                // FIXED: We changed 'file' to 'sshUserPrivateKey' to match your credential type
-                withCredentials([sshUserPrivateKey(credentialsId: 'ansible_ssh_key', keyFileVariable: 'MY_PEM_KEY', usernameVariable: 'SSH_USER')]) {
+                // FIXED: Using 'file' because your screenshot shows SSH_KEY_FILE is a "Secret File"
+                withCredentials([file(credentialsId: 'SSH_KEY_FILE', variable: 'MY_PEM_KEY')]) {
                     script {
-                        // The robot takes the key from the safe and copies it to a file
+                        // Copy the key from the safe to the workspace
                         sh 'cp $MY_PEM_KEY private_key.pem'
                         sh 'chmod 600 private_key.pem'
                     }
