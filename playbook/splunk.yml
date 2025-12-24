@@ -4,8 +4,8 @@
   tasks:
     - name: Download Splunk
       get_url:
-        # 1. FIXED: This is the Real Download Link
-        url: "https://download.splunk.com/products/splunk/releases/9.3.0/linux/splunk-9.3.0-51ccf43db5bd-linux-2.6-x86_64.rpm"
+        # This is a verified working link for Splunk 9.1.0
+        url: "https://download.splunk.com/products/splunk/releases/9.1.0/linux/splunk-9.1.0-1c86ca0bacc3-linux-2.6-x86_64.rpm"
         dest: /tmp/splunk.rpm
 
     - name: Install Splunk
@@ -21,7 +21,7 @@
       loop:
         - 8000/tcp
         - 8089/tcp
-      ignore_errors: yes # In case firewalld isn't installed
+      ignore_errors: yes # Ignores error if firewalld is missing (Amazon Linux uses Security Groups)
 
     - name: Enable Splunk Boot Start & Accept License
       command: "/opt/splunk/bin/splunk enable boot-start --accept-license --answer-yes --no-prompt"
